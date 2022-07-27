@@ -13,6 +13,8 @@ import {createTheme, ThemeProvider,Tab,Tabs,Box} from "@mui/material";
 import {TabPanel,a11yProps} from "../../component/TabPanel/TabPanel";
 import {getError, searchError} from "../../store/asyncAction/AsyncError";
 import {openSecondTable} from "../../store/slices/errorSlice";
+import {toast,ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
 
 const TableMain = React.lazy(()=>import('../../component/Table/Table'))
 
@@ -99,10 +101,16 @@ const Dashboard: React.FC = () => {
         dispatch(openSecondTable(false))
     }
 
+    const notify=(message:string)=>{
+        console.log(message)
+        toast.success(message)
+    }
+
     return (
         <React.Suspense fallback={<Loader/>}>
         <ThemeProvider theme={theme}>
-            <Modal/>
+            <Modal notify={notify}/>
+            <ToastContainer/>
             <Box sx={{width:'100%'}}>
                 <Navbar
                     darkTheme={themeStorage}
@@ -127,6 +135,7 @@ const Dashboard: React.FC = () => {
                         setSearchValue={setSearchValue}
                         searchValue={searchValue}
                         search={search}
+                        notify={notify}
                     />
                 </TabPanel>
                 <TabPanel value={value} index={1}>
@@ -140,6 +149,7 @@ const Dashboard: React.FC = () => {
                         setSearchValue={setSearchValue}
                         searchValue={searchValue}
                         search={search}
+                        notify={notify}
                     />
                 </TabPanel>
 

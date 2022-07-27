@@ -47,6 +47,7 @@ interface ITable {
     setSearchValue: any,
     searchValue: string,
     search: string,
+    notify:(message:string)=>void
 }
 const StyledTabled = styled(TableContainer)(({theme})=>`
           .resizer {
@@ -75,6 +76,7 @@ const TableMain: React.FC<ITable> = ({
                                          page,
                                          setSearchValue,
                                          searchValue,
+                                         notify
                                      }) => {
     const dispatch: AppDispatch = useDispatch()
 
@@ -121,9 +123,15 @@ const TableMain: React.FC<ITable> = ({
         resetResizing
     } = tableInstance
 
-    const deleteRow = async (data: any): Promise<void> => {
+    const deleteRow = async (data: any):Promise<void>=> {
         const mappedData = data.map((item: any) => isOpen ? item.original.error_id : item.original.request_id)
-        await dispatch(isOpen ? deleteError(mappedData) : deleteData(mappedData))
+        if(isOpen){
+            const {payload}:any = await dispatch(deleteError(mappedData))
+            notify(payload.message)
+            return
+        }
+        const {payload}:any =  await dispatch(deleteData(mappedData))
+        notify(payload.message)
     }
     const editData = (data: any): void => {
         const editable = data[0].original

@@ -10,10 +10,14 @@ import styles from './FormError.module.scss'
 import {AppDispatch, RootState} from "../../../store";
 import {useDispatch, useSelector} from "react-redux";
 import {createError, updateError} from "../../../store/asyncAction/AsyncError";
+import {toggleModal} from "../../../store/slices/dashboardSlice";
 import dayjs from "dayjs";
 
+interface IErrorForm{
+    notify:(message:string)=>void
+}
 
-const FormError:React.FC=()=>{
+const FormError:React.FC<IErrorForm>=({notify})=>{
     const dispatch:AppDispatch = useDispatch()
     const {isEdit,editData} = useSelector((state:RootState)=>state.error)
     const schema = yup.object().shape({
@@ -21,7 +25,7 @@ const FormError:React.FC=()=>{
         start_time:yup.date(),
         end_time:yup.date()
     })
-    const {control,handleSubmit,getValues} = useForm({
+    const {control,handleSubmit,setValue} = useForm({
         resolver:yupResolver(schema)
     })
 
@@ -31,12 +35,13 @@ const FormError:React.FC=()=>{
         if(isEdit){
             const editObject = {
                 ...editData,
-                description:isEdit && data.description == undefined ? editData.description : data.description,
+                description:isEdit && data.description === undefined ? editData.description : data.description,
                 date:editData.date,
                 end_time:data.end_time === undefined ? dayjs().format('HH:mm:ss'):data.end_time
             }
-            console.log(editObject)
-            await dispatch(updateError(editObject))
+            const {payload:{message}}:any = await dispatch(updateError(editObject))
+            notify(message)
+            dispatch(toggleModal({modalOpen:false}))
             return
         }
         const newError = {
@@ -44,7 +49,8 @@ const FormError:React.FC=()=>{
             date: data.date === undefined ? dayjs().format("YYYY-MM-DD") : data.date,
             start_time : data.start_time === undefined ? dayjs().format('HH:mm:ss') : data.start_time
         }
-         await dispatch(createError(newError))
+         const {payload:{message}}=await dispatch(createError(newError))
+        notify(message)
     }
 
     return (
@@ -54,10 +60,10 @@ const FormError:React.FC=()=>{
         >
             <Controller
                 control={control}
+                defaultValue={editData?.description}
                 render={({field:{onChange,value}})=>(
                     <TextField
                         onChange={onChange}
-                        defaultValue={isEdit ? editData?.description:""}
                         value={value}
                         label="Описания"
                         rows={5}
@@ -68,6 +74,7 @@ const FormError:React.FC=()=>{
             />
             <Controller
                 control={control}
+                defaultValue={isEdit ? editData.date : new Date()}
                 render={({field:{onChange,value}})=>(
                     <LocalizationProvider
                         dateAdapter={AdapterDayjs}
@@ -79,7 +86,6 @@ const FormError:React.FC=()=>{
                             value={value}
                             renderInput={(params:TextFieldProps)=>(
                                 <TextField
-                                    defaultValue={isEdit ? editData.date : ""}
                                     {...params}
                                 />
                             )}
@@ -88,18 +94,34 @@ const FormError:React.FC=()=>{
                 )}
                 name="date"
             />
-            {!isEdit && (
+            {/*<LocalizationProvider*/}
+            {/*    dateAdapter={AdapterDayjs}*/}
+            {/*    adapterLocale={ruLocale}*/}
+            {/*>*/}
+            {/*    <TimePicker*/}
+            {/*        label="Время начала"*/}
+            {/*        onChange={(time)=>setValue('start_time',time)}*/}
+            {/*        value={"11:25:00"}*/}
+            {/*        renderInput={(params:TextFieldProps)=>(*/}
+            {/*            <TextField*/}
+            {/*                {...params}*/}
+            {/*            />*/}
+            {/*        )}*/}
+            {/*    />*/}
+            {/*</LocalizationProvider>*/}
                 <Controller
                     control={control}
-                    render={({field:{onChange,value}})=>(
-                        <LocalizationProvider
-                            local={ruLocale}
+                    defaultValue={dayjs()}
+                    render={({field:{onChange,value}})=>{
+                        console.log()
+                       return <LocalizationProvider
+                            adapterLocale={ruLocale}
                             dateAdapter={AdapterDayjs}
                         >
                             <TimePicker
-                                value={value}
+                                value={isEdit ? dayjs(`${editData.date}${editData.start_time}`) : value}
                                 onChange={onChange}
-                                inputFormat="HH:mm"
+                                inputFormat="HH:mm:ss"
                                 label="Время начала"
                                 renderInput={(params:TextFieldProps)=>(
                                     <TextField
@@ -108,16 +130,17 @@ const FormError:React.FC=()=>{
                                 )}
                             />
                         </LocalizationProvider>
-                    )}
+                    }
+                    }
                     name="start_time"
                 />
-            )}
             {isEdit && (
                 <Controller
                     control={control}
+                    defaultValue={(isEdit && editData.end_time) ? dayjs(`${editData.date}${editData.end_time}`) : dayjs()}
                     render={({field:{onChange,value}})=>(
                         <LocalizationProvider
-                            local={ruLocale}
+                            adapterLocale={ruLocale}
                             dateAdapter={AdapterDayjs}
                         >
                             <TimePicker

@@ -27,5 +27,4 @@ export interface IDashboard  {
     count:number,
     users:any,
     isSuccess:boolean,
-    message:string
 }

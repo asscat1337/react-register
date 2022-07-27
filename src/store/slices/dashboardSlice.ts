@@ -31,7 +31,6 @@ const initialState:IDashboard = {
     },
     users:[],
     isSuccess:false,
-    message:""
 }
 
 const dashboardSlice = createSlice({
@@ -79,24 +78,28 @@ const dashboardSlice = createSlice({
                 loading:false,
                 data:[...state.data,action.payload.newData],
                 isSuccess:true,
-                message:action.payload.message
             }
         })
         builder.addCase(createData.rejected,(state,action)=>{
             state.loading = true
         })
         builder.addCase(deleteData.fulfilled,(state,action)=>{
-            state.data = state.data.filter(item=>!action.payload.deleted.includes(item.request_id))
+            return {
+                ...state,
+                data:state.data.filter(item=>!action.payload.deleted.includes(item.request_id)),
+                isSuccess:true
+            }
         })
         builder.addCase(updateData.pending,(state,action)=>{
             state.loading = true
         })
         builder.addCase(updateData.fulfilled,(state,action)=>{
+            console.log(action.payload.updateData)
             return {
                 ...state,
                 loading:false,
                 data:state.data.map(item=>{
-                    if(item.request_id === action.payload.request_id){
+                    if(item.request_id === action.payload.updateData.request_id){
                         return {
                             ...action.payload.updateData
                         }
@@ -104,7 +107,6 @@ const dashboardSlice = createSlice({
                     return item
                 }),
                 isSuccess:true,
-                message:""
             }
         })
         builder.addCase(updateData.rejected,(state,action)=>{

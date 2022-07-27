@@ -86,7 +86,7 @@ const errorSlice = createSlice({
             return {
                 ...state,
                 loading: false,
-                errorData: [...state.errorData, action.payload]
+                errorData: [...state.errorData, action.payload.newData]
             }
         })
         builder.addCase(createError.rejected,(state,action)=>{
@@ -127,9 +127,9 @@ const errorSlice = createSlice({
                 ...state,
                 loading:false,
                 errorData:state.errorData.map(item=>{
-                    if(item.error_id === action.payload.error_id){
+                    if(item.error_id === action.payload.data.error_id){
                         return {
-                            ...action.payload
+                            ...action.payload.data
                         }
                     }
                     return item

@@ -24,9 +24,10 @@ import 'react-toastify/dist/ReactToastify.css'
 interface IFormRequest{
     onSubmit?:any,
     isEdit:boolean,
+    notify:(message:string)=>void
 }
 
-const FormRequest:React.FC<IFormRequest>=({isEdit})=>{
+const FormRequest:React.FC<IFormRequest>=({isEdit,notify})=>{
     const dispatch:AppDispatch = useDispatch()
     const {status,editData,users} = useSelector((state:RootState)=>state.dashboard)
     const {user} = useSelector((state:RootState)=>state.user)
@@ -53,16 +54,18 @@ const FormRequest:React.FC<IFormRequest>=({isEdit})=>{
                 end_date:data.end_date === undefined ? dayjs().format('YYYY-MM-DD') : data.end_date,
                 statusId:data.statusId === undefined ? editData.status : data.statusId
             }
-          await dispatch(updateData(transformedData));
+          const {payload}:any = await dispatch(updateData(transformedData));
           dispatch(toggleModal({modalOpen:false,isEdit:false}))
-          reset()
-          return
+          notify(payload.message)
+           return
         }
-        await dispatch(createData({
+       const {payload}:any =  await dispatch(createData({
             ...data,
             author:data.author === undefined ? user.user.fio : data.author,
             start_date: data.start_date === undefined ? dayjs().format('YYYY-MM-DD') : data.start_date
         }));
+        notify(payload.message)
+        reset()
         dispatch(toggleModal({modalOpen:false,isEdit:false}))
     }
 

@@ -37,7 +37,7 @@ class DashboardController {
             const {payload} = req.body
             const deleted = await deleteData(payload)
 
-            return res.status(200).json({message:deleted})
+            return res.status(200).json({message:"Запись удалена"})
         }
         catch (e) {
             return res.status(500).json(e)

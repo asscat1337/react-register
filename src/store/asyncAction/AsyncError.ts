@@ -41,7 +41,7 @@ const deleteError=createAsyncThunk(
             }
         })
 
-        return {deleted:payload,data}
+        return {deleted:payload,message:data.message}
     }
 )
 const searchError = createAsyncThunk(

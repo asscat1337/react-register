@@ -40,7 +40,7 @@ const deleteData = createAsyncThunk(
                    payload
                }
            })
-        return {deleted:payload,data}
+        return {deleted:payload,message:data.message}
     }
 )
 const updateData = createAsyncThunk(

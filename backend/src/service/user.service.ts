@@ -45,7 +45,7 @@ const loginUser = async (payload:IUser)=>{
     const decodePassword = await bcrypt.compare(password,findUser?.password as string)
     console.log(decodePassword)
     if (!decodePassword){
-        throw new CustomError({auth:false,message:'неверный пароль'})
+        throw new CustomError({auth:false,message:'Неверный пароль'})
     }
     if(!findUser){
         throw new CustomError({

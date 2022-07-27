@@ -21,8 +21,11 @@ const MyModal = styled(Dialog)(({ theme }) => ({
       }
 }));
 
+interface IModal{
+   notify:(message:string)=>void
+}
 
-const Modal:React.FC=()=>{
+const Modal:React.FC<IModal>=({notify})=>{
     const {isOpen} = useSelector((state:RootState)=>state.error)
     const dispatch:AppDispatch = useDispatch()
     const {modalOpen,isEdit} = useSelector((state:RootState)=>state.dashboard)
@@ -40,9 +43,14 @@ const Modal:React.FC=()=>{
                 <DialogContent>
                     <DialogContentText>Tecт</DialogContentText>
                     {isOpen ?
-                        <FormError/>
+                        <FormError
+                            notify={notify}
+                        />
                         :
-                        <FormRequest isEdit={isEdit}/>
+                        <FormRequest
+                            notify={notify}
+                            isEdit={isEdit}
+                        />
                     }
                 </DialogContent>
             </MyModal>

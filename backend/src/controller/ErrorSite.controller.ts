@@ -8,7 +8,7 @@ class ErrorSiteController{
         try{
             const newData = await create(req.body)
 
-            return res.status(200).json(newData)
+            return res.status(200).json({newData,message:"Запись добавлена"})
         }catch (e) {
             return res.status(500).json(e)
         }
@@ -30,7 +30,7 @@ class ErrorSiteController{
             const {payload} = req.body
             const deleted = await deleteData(payload)
 
-            return res.status(200).json(deleted)
+            return res.status(200).json({message:"Запись удалена"})
         }catch (e) {
             return res.status(500).json(e)
         }
@@ -38,7 +38,7 @@ class ErrorSiteController{
     async update(req:Request,res:Response,next:NextFunction):Promise<Response>{
         try{
             const data = await update(req.body)
-            return res.status(200).json(data)
+            return res.status(200).json({data,message:"Запись обновлена"})
         }catch (e) {
             return res.status(500).json(e)
         }
