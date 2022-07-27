@@ -2,14 +2,14 @@
 
 # Технологический стек
 
-# Frontend:
+### Frontend:
 - Material UI
 - React
 - Redux-toolkit
 - React-hook-form
 - Axios
 - Typescript
-# Backend:
+### Backend:
 - Typescript
 - Node.js
 - Express
