@@ -32,12 +32,11 @@ const deleteData=async (payload:number[])=>{
 }
 const update=async (payload:any)=>{
     const {end_time} = payload
-    const updateData = await ErrorSite.update({...payload,end_time},{
+    const updateData = await ErrorSite.update({...payload,end_time:dayjs(end_time).format('HH:mm')},{
         where:{
             error_id:payload.error_id
         }
     })
-    console.log(updateData)
 
     const updatedData = await ErrorSite.findByPk(payload.error_id)
 
