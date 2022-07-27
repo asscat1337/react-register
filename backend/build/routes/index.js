@@ -1,0 +1,14 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
+const user_router_1 = require("./user.router");
+const dashboard_router_1 = require("./dashboard.router");
+const status_router_1 = require("./status.router");
+const errorsite_router_1 = require("./errorsite.router");
+const express_1 = require("express");
+const router = (0, express_1.Router)();
+exports.router = router;
+router.use('/user', user_router_1.userRouter);
+router.use('/dashboard', dashboard_router_1.dashboardRouter);
+router.use('/status', status_router_1.statusRouter);
+router.use('/errorSite', errorsite_router_1.ErrorSiteRouter);

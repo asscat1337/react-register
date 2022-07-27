@@ -1,0 +1,10 @@
+.container{
+  display: flex;
+  justify-content: center;
+  flex-flow: wrap column;
+  padding:25px 15px 35px;
+
+  div{
+    margin-top:10px;
+  }
+}
