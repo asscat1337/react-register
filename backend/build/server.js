@@ -27,16 +27,16 @@ app.use((0, cors_1.default)({
     credentials: true
 }));
 app.use((0, cookie_parser_1.default)());
+app.use(express_1.default.static(path_1.default.resolve('../', 'build')));
 app.use('/api', routes_1.router);
-if (process.env.PRODUCTION_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
     app.use((0, helmet_1.default)());
     app.get('*', (req, res) => {
-        console.log(path_1.default.resolve('../..', 'build', 'index.html'));
-        res.sendFile(path_1.default.resolve('../..', 'build', 'index.html'));
+        res.sendFile(path_1.default.resolve('../', 'build', 'index.html'));
     });
 }
 app.listen(process.env.PORT, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(process.env.PRODUCTION_ENV);
+    console.log(process.env.NODE_ENV, 'test');
     console.log(`server started`);
     yield (0, connection_1.start)();
 }));

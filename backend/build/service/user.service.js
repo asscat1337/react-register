@@ -78,7 +78,7 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const decodePassword = yield bcrypt.compare(password, findUser === null || findUser === void 0 ? void 0 : findUser.password);
     console.log(decodePassword);
     if (!decodePassword) {
-        throw new error_1.CustomError({ auth: false, message: 'неверный пароль' });
+        throw new error_1.CustomError({ auth: false, message: 'Неверный пароль' });
     }
     if (!findUser) {
         throw new error_1.CustomError({

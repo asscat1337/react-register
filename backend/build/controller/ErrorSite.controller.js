@@ -15,7 +15,7 @@ class ErrorSiteController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const newData = yield (0, ErrorSite_service_1.create)(req.body);
-                return res.status(200).json(newData);
+                return res.status(200).json({ newData, message: "Запись добавлена" });
             }
             catch (e) {
                 return res.status(500).json(e);
@@ -41,7 +41,7 @@ class ErrorSiteController {
             try {
                 const { payload } = req.body;
                 const deleted = yield (0, ErrorSite_service_1.deleteData)(payload);
-                return res.status(200).json(deleted);
+                return res.status(200).json({ message: "Запись удалена" });
             }
             catch (e) {
                 return res.status(500).json(e);
@@ -52,7 +52,7 @@ class ErrorSiteController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = yield (0, ErrorSite_service_1.update)(req.body);
-                return res.status(200).json(data);
+                return res.status(200).json({ data, message: "Запись обновлена" });
             }
             catch (e) {
                 return res.status(500).json(e);

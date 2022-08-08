@@ -43,7 +43,7 @@ class DashboardController {
             try {
                 const { payload } = req.body;
                 const deleted = yield (0, dashboard_service_1.deleteData)(payload);
-                return res.status(200).json({ message: deleted });
+                return res.status(200).json({ message: "Запись удалена" });
             }
             catch (e) {
                 return res.status(500).json(e);

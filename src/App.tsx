@@ -3,6 +3,8 @@ import {Routes,Route} from "react-router-dom";
 import './App.css';
 import {CssBaseline} from "@mui/material";
 import {PrivateRouter} from "./component/routes/PrivateRouter";
+import {Test} from "./pages/test/Test";
+
 const Dashboard = React.lazy(()=>import('./pages/Dashboard/Dashboard'))
 const Login = React.lazy(()=>import('./pages/Login/Login'))
 
@@ -23,6 +25,7 @@ function App() {
                         <Login/>
                     </React.Suspense>
                 }/>
+                <Route path="/test" element={<Test/>}/>
             </Routes>
             <CssBaseline/>
         </div>

@@ -8,10 +8,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getUser = exports.search = exports.get = exports.update = exports.deleteData = exports.create = void 0;
 const ErrorSite_1 = require("../models/ErrorSite");
 const sequelize_1 = require("sequelize");
+const dayjs_1 = __importDefault(require("dayjs"));
 const User_1 = require("../models/User");
 const get = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { page, limit } = payload;
@@ -40,12 +44,11 @@ const deleteData = (payload) => __awaiter(void 0, void 0, void 0, function* () {
 exports.deleteData = deleteData;
 const update = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { end_time } = payload;
-    const updateData = yield ErrorSite_1.ErrorSite.update(Object.assign(Object.assign({}, payload), { end_time }), {
+    const updateData = yield ErrorSite_1.ErrorSite.update(Object.assign(Object.assign({}, payload), { end_time: (0, dayjs_1.default)(end_time).format('HH:mm') }), {
         where: {
             error_id: payload.error_id
         }
     });
-    console.log(updateData);
     const updatedData = yield ErrorSite_1.ErrorSite.findByPk(payload.error_id);
     return updatedData;
 });
