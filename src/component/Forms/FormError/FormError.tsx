@@ -78,7 +78,7 @@ const FormError:React.FC<IErrorForm>=({notify})=>{
                 render={({field:{onChange,value}})=>(
                     <LocalizationProvider
                         dateAdapter={AdapterDayjs}
-                        locale={ruLocale}
+                        adapterLocale={ruLocale}
                     >
                         <DatePicker
                             label="Дата"
@@ -94,26 +94,10 @@ const FormError:React.FC<IErrorForm>=({notify})=>{
                 )}
                 name="date"
             />
-            {/*<LocalizationProvider*/}
-            {/*    dateAdapter={AdapterDayjs}*/}
-            {/*    adapterLocale={ruLocale}*/}
-            {/*>*/}
-            {/*    <TimePicker*/}
-            {/*        label="Время начала"*/}
-            {/*        onChange={(time)=>setValue('start_time',time)}*/}
-            {/*        value={"11:25:00"}*/}
-            {/*        renderInput={(params:TextFieldProps)=>(*/}
-            {/*            <TextField*/}
-            {/*                {...params}*/}
-            {/*            />*/}
-            {/*        )}*/}
-            {/*    />*/}
-            {/*</LocalizationProvider>*/}
                 <Controller
                     control={control}
                     defaultValue={dayjs()}
                     render={({field:{onChange,value}})=>{
-                        console.log()
                        return <LocalizationProvider
                             adapterLocale={ruLocale}
                             dateAdapter={AdapterDayjs}

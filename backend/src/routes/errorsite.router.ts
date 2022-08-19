@@ -11,6 +11,7 @@ ErrorSiteRouter.get('/get',ErrorSiteController.get)
 ErrorSiteRouter.put('/update',ErrorSiteController.update)
 ErrorSiteRouter.delete('/delete',ErrorSiteController.deleteData)
 ErrorSiteRouter.get('/search',ErrorSiteController.search)
+ErrorSiteRouter.put('/close-error',ErrorSiteController.closeError)
 
 
 export {

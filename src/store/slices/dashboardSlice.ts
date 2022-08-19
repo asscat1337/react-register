@@ -7,7 +7,7 @@ import {
     deleteData,
     updateData,
     searchData,
-    filterData, resetAll, getUsers
+    filterData, resetAll, getUsers, closeRequest
 } from "../asyncAction/AsyncDashboard";
 
 const initialState:IDashboard = {
@@ -173,6 +173,23 @@ const dashboardSlice = createSlice({
                 ...state,
                 loading:true
             }
+        })
+        builder.addCase(closeRequest.pending,(state,action)=>{
+            state.loading = true
+        })
+        builder.addCase(closeRequest.fulfilled,(state,{payload})=>{
+            state.data = state.data.map(item=>{
+                if(item.request_id === payload.data.request_id){
+                    return {
+                        ...item,
+                        end_date: payload.data.end_date
+                    }
+                }
+                return item
+            })
+        })
+        builder.addCase(closeRequest.rejected,(state,action)=>{
+            state.loading = true
         })
     }
 })

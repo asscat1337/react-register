@@ -5,7 +5,9 @@ import {
     deleteData,
     update,
     find,
-    filter, reset
+    filter,
+    reset,
+    close
 } from '../service/dashboard.service'
 import {getUser} from "../service/ErrorSite.service";
 
@@ -66,8 +68,7 @@ class DashboardController {
     }
     async filter(req:Request,res:Response,next:NextFunction):Promise<Response>{
         try{
-            const {id}=req.query
-            const data = await filter(id as string)
+            const data = await filter(req.query)
 
             return res.status(200).json(data)
         }catch (e) {
@@ -86,6 +87,17 @@ class DashboardController {
     async getUsers(req:Request,res:Response,next:NextFunction):Promise<Response>{
         try{
             const data = await getUser()
+
+            return res.status(200).json(data)
+        }catch (e) {
+            return res.status(500).json(e)
+        }
+    }
+    async closeRequest(req:Request,res:Response,next:NextFunction):Promise<Response>{
+        try{
+            const {request_id} = req.body
+
+            const data = await close(request_id as number)
 
             return res.status(200).json(data)
         }catch (e) {

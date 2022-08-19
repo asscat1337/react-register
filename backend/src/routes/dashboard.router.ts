@@ -13,6 +13,7 @@ dashboardRouter.get('/find',DashboardController.find)
 dashboardRouter.get('/filter',DashboardController.filter)
 dashboardRouter.get('/reset',DashboardController.reset)
 dashboardRouter.get('/get-users',DashboardController.getUsers)
+dashboardRouter.put('/close-request',DashboardController.closeRequest)
 
 
 export {

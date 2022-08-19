@@ -20,7 +20,8 @@ app.use(express.static(path.resolve('../','build')))
 app.use('/api',router)
 
 if(process.env.NODE_ENV === 'production'){
-    app.use(helmet())
+    // app.use(helmet())
+    console.log('test')
     app.get('*',(req,res)=>{
         res.sendFile(path.resolve('../','build','index.html'))
     })

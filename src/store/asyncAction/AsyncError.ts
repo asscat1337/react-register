@@ -11,11 +11,10 @@ const createError=createAsyncThunk(
 const getError=createAsyncThunk(
     'error/get',
     async(payload:any,thunkAPI)=>{
-        console.log(payload)
         const {data} = await $http.get('/errorSite/get',{
             params:{
                 page:payload.page,
-                limit:payload.limit
+                limit:payload.limit || payload.pageSize
             }
         })
 
@@ -55,6 +54,14 @@ const searchError = createAsyncThunk(
         return data
     }
 )
+const closeError = createAsyncThunk(
+    'error/close-error',
+    async(payload:any,thunkAPI)=>{
+        const {data}:any = await $http.put('/errorSite/close-error',payload)
+
+        return data
+    }
+)
 
 
 export {
@@ -62,5 +69,6 @@ export {
     deleteError,
     getError,
     updateError,
-    searchError
+    searchError,
+    closeError
 }

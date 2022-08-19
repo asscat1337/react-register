@@ -1,8 +1,8 @@
 import React from "react";
 import {
     Box,
-    IconButton, useTheme,
-
+    IconButton,
+    useTheme,
 } from "@mui/material";
 import {FirstPage, KeyboardArrowLeft, KeyboardArrowRight, LastPage} from "@mui/icons-material";
 import {AppDispatch, RootState} from "../../../store";

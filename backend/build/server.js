@@ -18,7 +18,6 @@ const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const connection_1 = require("./core/connection");
 const routes_1 = require("./routes");
-const helmet_1 = __importDefault(require("helmet"));
 const path_1 = __importDefault(require("path"));
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
@@ -30,7 +29,8 @@ app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.static(path_1.default.resolve('../', 'build')));
 app.use('/api', routes_1.router);
 if (process.env.NODE_ENV === 'production') {
-    app.use((0, helmet_1.default)());
+    // app.use(helmet())
+    console.log('Запушено в production');
     app.get('*', (req, res) => {
         res.sendFile(path_1.default.resolve('../', 'build', 'index.html'));
     });

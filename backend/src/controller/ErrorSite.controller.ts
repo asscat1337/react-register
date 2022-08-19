@@ -1,4 +1,4 @@
-import {create,deleteData,update,get,search} from "../service/ErrorSite.service";
+import {create,deleteData,update,get,search,error} from "../service/ErrorSite.service";
 import {NextFunction, Request, Response} from "express";
 
 
@@ -47,6 +47,16 @@ class ErrorSiteController{
         try{
             const {id} = req.query
             const data = await search(id as string)
+
+            return res.status(200).json(data)
+        }catch (e) {
+            return res.status(500).json(e)
+        }
+    }
+    async closeError(req:Request,res:Response,next:NextFunction):Promise<Response>{
+        try{
+            const {error_id} = req.body
+            const data = await error(error_id)
 
             return res.status(200).json(data)
         }catch (e) {

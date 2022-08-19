@@ -1,10 +1,20 @@
 import {Column} from "react-table";
 import React from "react";
-import dayjs from "dayjs";
 import {minusTime} from "../../../utils/minusTime";
+import {Button} from "@mui/material";
+import {AppDispatch} from "../../../store";
+import {useDispatch} from "react-redux";
+import {closeError} from "../../../store/asyncAction/AsyncError";
 
 
 const ColumnsError=()=>{
+    const dispatch:AppDispatch = useDispatch()
+
+
+    const closeErrorAction=async (payload:any)=>{
+        await dispatch(closeError(payload))
+    }
+
     const columns:Column[] = React.useMemo(()=>[
         {
             Header:'Описание',
@@ -31,6 +41,15 @@ const ColumnsError=()=>{
                 return <>{endTime ? minusTime(startTime,endTime) : null}</>
             }
         },
+        {
+            Header:'',
+            accessor: 'actions',
+            Cell:({row:{original}})=>(
+                <Button onClick={()=>closeErrorAction(original)}>
+                    Закрыть
+                </Button>
+            )
+        }
     ],[])
 
     return columns

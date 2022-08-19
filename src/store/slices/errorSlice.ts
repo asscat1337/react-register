@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {IError} from "../types/ErrorTypes";
-import {createError, deleteError, getError, searchError, updateError} from '../asyncAction/AsyncError'
+import {closeError, createError, deleteError, getError, searchError, updateError} from '../asyncAction/AsyncError'
 
 
 const initialState:IError = {
@@ -86,7 +86,7 @@ const errorSlice = createSlice({
             return {
                 ...state,
                 loading: false,
-                errorData: [...state.errorData, action.payload.newData]
+                errorData: [...state.errorData!, action.payload.newData]
             }
         })
         builder.addCase(createError.rejected,(state,action)=>{
@@ -105,7 +105,7 @@ const errorSlice = createSlice({
             return {
                 ...state,
                 loading:false,
-                errorData:state.errorData.filter(item=>{
+                errorData:state.errorData!.filter(item=>{
                     return !action.payload.deleted.includes(item.error_id)
                 })
             }
@@ -126,7 +126,7 @@ const errorSlice = createSlice({
             return {
                 ...state,
                 loading:false,
-                errorData:state.errorData.map(item=>{
+                errorData:state!.errorData!.map(item=>{
                     if(item.error_id === action.payload.data.error_id){
                         return {
                             ...action.payload.data
@@ -141,6 +141,24 @@ const errorSlice = createSlice({
                 ...state,
                 loading:false
             }
+        })
+        builder.addCase(closeError.pending,(state)=>{
+            state.loading = true
+        })
+        builder.addCase(closeError.fulfilled,(state,{payload})=>{
+            return {
+                ...state,
+                errorData:state.errorData.map(item=>{
+                    if(item.error_id === payload.error_id){
+                        return {
+                            ...item,
+                            end_time: payload.end_time
+                        }
+                    }
+                    return item
+                })
+            }
+
         })
     }
 })

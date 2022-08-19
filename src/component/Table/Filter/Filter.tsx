@@ -21,54 +21,63 @@ import {AppDispatch, RootState} from "../../../store";
 import {filterData, resetAll} from "../../../store/asyncAction/AsyncDashboard";
 
 
-interface IFilter{
-    instance:TableInstance
+interface IFilter {
+    instance: TableInstance
 }
 
-const Filter:React.FC<IFilter>=({instance})=>{
-    const dispatch:AppDispatch = useDispatch()
-    const {status} = useSelector((state:RootState)=>state.dashboard)
-    const {isOpen} = useSelector((state:RootState)=>state.error)
-    const {allColumns,Filter} = instance
-    const [anchorEl,setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
-    const statusRef = React.useRef<HTMLInputElement|null>(null)
-    const [startDate,setStartDate] = React.useState<Date | null>(null)
-    const [endDate,setEndDate] = React.useState<Date | null>(null)
+const Filter: React.FC<IFilter> = () => {
+    const dispatch: AppDispatch = useDispatch()
+    const {status} = useSelector((state: RootState) => state.dashboard)
+    const {isOpen} = useSelector((state: RootState) => state.error)
+    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null)
+    const statusRef = React.useRef<HTMLInputElement | null>(null)
+    const [startDate, setStartDate] = React.useState<Date | null>(null)
+    const [endDate, setEndDate] = React.useState<Date | null>(null)
+    const [currentStatus,setCurrentStatus] = React.useState<any>({})
     const open = Boolean(anchorEl)
 
-    const handleClick=(event:React.MouseEvent<HTMLButtonElement>)=>{
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget)
     }
-    const handleClose=()=>{
+    const handleClose = () => {
         setAnchorEl(null)
     }
 
-    const requestDate=async (payload:Date | null)=>{
-        await dispatch(filterData({id:dayjs(payload).format('YYYY-MM-DD')}))
+    const requestDate = async (payload: Date | null) => {
+        await dispatch(filterData({id: dayjs(payload).format('YYYY-MM-DD')}))
     }
 
-    const changeStartDate=async (payload:any)=>{
-       setStartDate(payload)
+    const changeStartDate = (payload: any) => {
+        setStartDate(payload)
 
-        await requestDate(payload)
+        // await requestDate(payload)
     }
 
-    const changeEndData=async (payload:any)=>{
+    const changeEndData =(payload: any) => {
         setEndDate(payload)
 
-        await requestDate(payload)
     }
-    const onChangeStatus=async (data:any)=>{
-        console.log(data)
-        await dispatch(filterData(data))
+    const onChangeStatus = async (data: any) => {
+        setCurrentStatus(data)
+        // await dispatch(filterData(data))
     }
 
-    const onResetAll=async ()=>{
+    const onResetAll = async () => {
         const isStatus = statusRef.current?.value
-       if(startDate || endDate || isStatus ){
+        if (startDate || endDate || isStatus) {
             setAnchorEl(null)
             await dispatch(resetAll())
-       }
+        }
+    }
+
+    const onFilterData = async () => {
+        const startDateObject = startDate ? {start_date:dayjs(startDate).format('YYYY-MM-DD')} : null
+        const endDateObject = endDate ? {end_date:dayjs(endDate).format('YYYY-MM-DD')} : null
+        const statusObject = currentStatus ? {statusId:currentStatus.id} : null
+
+        const filterObject = {...startDateObject,...endDateObject,...statusObject}
+
+        await dispatch(filterData(filterObject))
     }
 
     const id = open ? 'simple-popover' : undefined
@@ -77,52 +86,67 @@ const Filter:React.FC<IFilter>=({instance})=>{
         <div>
             {!isOpen && (
                 <>
-                <IconButton onClick={handleClick}>
-                    <FilterList/>
-                </IconButton>
-                <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                vertical:'bottom',
-                horizontal:'left'
-            }}
-                transformOrigin={{
-                vertical:"top",
-                horizontal:"right"
-            }}
-                >
-                <Paper elevation={4} sx={{width:'250px',p:2}}>
-                <Button onClick={onResetAll}>
-                Очистить
-                </Button>
-                <Autocomplete
-                renderInput={(params => (
-                <TextField
-                inputRef={statusRef}
-            {...params}
-                label="Статус"
-                />
-                ))}
-                options={status}
-                onChange={(event,newValue)=>onChangeStatus(newValue)}
-                />
-                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={ruLocale}>
-                <DatePicker
-                onChange={(newValue)=>changeStartDate(newValue)}
-                value={startDate}
-                renderInput={(params)=><TextField {...params}/>}
-                />
-                <DatePicker
-                onChange={(newValue)=>changeEndData(newValue)}
-                value={endDate}
-                renderInput={(params)=><TextField {...params}/>}
-                />
-                </LocalizationProvider>
-                </Paper>
-                </Popover>
+                    <IconButton onClick={handleClick}>
+                        <FilterList/>
+                    </IconButton>
+                    <Popover
+                        id={id}
+                        open={open}
+                        anchorEl={anchorEl}
+                        onClose={handleClose}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left'
+                        }}
+                        transformOrigin={{
+                            vertical: "top",
+                            horizontal: "right"
+                        }}
+                    >
+                        <Paper elevation={4} sx={{width: '350px', p: 2}}>
+                            <Button onClick={onResetAll}>
+                                Очистить
+                            </Button>
+                            <Autocomplete
+                                sx={{p:2}}
+                                renderInput={(params => (
+                                    <TextField
+                                        inputRef={statusRef}
+                                        {...params}
+                                        label="Статус"
+                                    />
+                                ))}
+                                options={status}
+                                onChange={(event, newValue) => onChangeStatus(newValue)}
+                            />
+                            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={ruLocale}>
+                                <DatePicker
+                                    onChange={(newValue) => changeStartDate(newValue)}
+                                    value={startDate}
+                                    renderInput={(params) =>
+                                        <TextField
+                                            sx={{width:'250px',m:2}}
+                                            {...params}
+                                            label="Дата начала"
+                                        />}
+                                />
+                                <DatePicker
+                                    onChange={(newValue) => changeEndData(newValue)}
+                                    value={endDate}
+                                    renderInput={(params) =>
+                                        <TextField
+                                            sx={{width:'250px',m:2}}
+                                            {...params}
+                                            label="Дата окончания"
+                                        />}
+                                />
+                            </LocalizationProvider>
+
+                            <Button onClick={onFilterData}>
+                                Применить
+                            </Button>
+                        </Paper>
+                    </Popover>
                 </>
             )}
         </div>

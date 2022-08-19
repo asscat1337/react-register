@@ -1,6 +1,8 @@
 import {RequestRegister} from "../models/RequestRegister";
 import {Status} from "../models/Status";
 import {Op} from 'sequelize'
+import {Dashboard} from "@mui/icons-material";
+import dayjs from "dayjs";
 
 
 const create = async (data: any) => {
@@ -85,20 +87,9 @@ const find = async(payload:string)=>{
 }
 
 const filter=async(payload:any)=>{
-    console.log(payload)
     const data = await RequestRegister.findAll({
         where:{
-            [Op.or]:[
-                {start_date: {
-                        [Op.substring]:payload
-                    }},
-                {end_date:{
-                    [Op.substring]:payload
-                }},
-                {statusId:{
-                    [Op.substring]:payload
-                    }}
-            ]
+            [Op.or]:payload
         },
         include:[{
             model:Status
@@ -114,6 +105,19 @@ const reset=async ()=>{
     return data
 }
 
+const close = async(payload:number)=>{
+    await RequestRegister.update({
+        end_date:dayjs().format('YYYY-MM-DD'),
+        statusId:2
+    },{
+        where:{
+            request_id:payload
+        }
+    })
+    const data = await RequestRegister.findByPk(payload)
+    return data
+}
+
 export {
     create,
     get,
@@ -121,5 +125,6 @@ export {
     update,
     find,
     filter,
-    reset
+    reset,
+    close
 }

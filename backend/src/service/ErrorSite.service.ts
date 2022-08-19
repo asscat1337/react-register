@@ -6,6 +6,7 @@ import {User} from "../models/User";
 
 const get=async (payload:any)=>{
     const {page,limit} = payload
+    console.log(page,limit)
     const data = await ErrorSite.findAndCountAll({
         limit: +limit,
         offset:+page * +limit
@@ -17,6 +18,7 @@ const get=async (payload:any)=>{
 const create=async (payload:any)=>{
     const data = await ErrorSite.create({
         ...payload,
+        start_time:dayjs(payload.start_time).format('HH:mm:ss')
     })
     return data
 }
@@ -68,6 +70,19 @@ const getUser=async ()=>{
         }
     })
 }
+const error = async(payload:number)=>{
+    await ErrorSite.update({
+        end_time:dayjs().format('HH:mm:ss')
+    },{
+        where:{
+            error_id:payload
+        }
+    })
+
+    const data = await ErrorSite.findByPk(payload)
+
+    return data
+}
 
 export {
     create,
@@ -75,5 +90,6 @@ export {
     update,
     get,
     search,
-    getUser
+    getUser,
+    error
 }

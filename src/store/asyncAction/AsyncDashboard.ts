@@ -67,9 +67,7 @@ const filterData = createAsyncThunk(
     async(payload:any,thunkAPI)=>{
         const {data} = await $http.get('/dashboard/filter',{
             params:{
-                id:payload.id,
-                start_date:payload.id,
-                end_date:payload.id
+                ...payload
             }
         })
 
@@ -92,6 +90,14 @@ const getUsers = createAsyncThunk(
         return data
     }
 )
+const closeRequest = createAsyncThunk(
+    'dashboard/close-request',
+    async(payload:any,thunkAPI)=>{
+        const {data}:any = await $http.put('/dashboard/close-request',payload)
+
+        return {data}
+    }
+)
 
 
 export {
@@ -103,5 +109,6 @@ export {
     searchData,
     filterData,
     resetAll,
-    getUsers
+    getUsers,
+    closeRequest
 }

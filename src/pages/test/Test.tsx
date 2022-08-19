@@ -10,6 +10,7 @@ const Test=()=>{
     const getUser=async()=>{
         await bx24.getAuth()
             .then(async (auth)=>{
+                console.log(auth)
                const {data}:any = await axios.get(`https://bitrix.gkb13ufa.ru/rest/user.current?auth=${auth.ACCESS_TOKEN}`)
                 console.log(data)
             })
